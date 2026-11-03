@@ -1,0 +1,18 @@
+# The game and Web application are independent projects. The Web JAR and
+# integration scripts are resources checked into this DNF build context.
+ARG DNF_IMAGE=1995chen/dnf:centos7-latest
+ARG JAVA_IMAGE=eclipse-temurin:21-jdk
+FROM ${JAVA_IMAGE} AS java
+FROM ${DNF_IMAGE}
+COPY --from=java /opt/java/openjdk/ /opt/dnf-admin/jre/
+COPY build/Centos7-DNF/web/dnf-admin.jar /opt/dnf-admin/app.jar
+COPY build/Centos7-DNF/web/init.sql /opt/dnf-admin/init.sql
+COPY build/Centos7-DNF/web/integration/ /opt/dnf-admin/
+RUN mv /home/template/init/init.sh /home/template/init/init.sh.upstream \
+    && cp /opt/dnf-admin/init-wrapper.sh /home/template/init/init.sh \
+    && mv /docker-entrypoint.sh /docker-entrypoint.sh.upstream \
+    && cp /opt/dnf-admin/entrypoint-wrapper.sh /docker-entrypoint.sh \
+    && cp /opt/dnf-admin/web.conf /etc/supervisor/conf.d/dnf-admin.conf \
+    && chmod +x /docker-entrypoint.sh /home/template/init/init.sh /opt/dnf-admin/*.sh /opt/dnf-admin/*.py \
+    && python /opt/dnf-admin/patch_monitor.py
+EXPOSE 9001

@@ -1,8 +1,18 @@
-# 地下城与勇士容器版本
+# DNF 服务
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/5hFbZLArT4z93ByaTYNZ2x/RreRQeCp7yaWKmcyWrNDEs/tree/main.svg?style=svg&circle-token=CCIPRJ_Sg2B4EQQ3NGhtpCzrE5BgJ_cf6d6666bb4468d097db9ad01858ed43608eea82)](https://dl.circleci.com/status-badge/redirect/circleci/5hFbZLArT4z93ByaTYNZ2x/RreRQeCp7yaWKmcyWrNDEs/tree/main)
 [![Docker Image](https://img.shields.io/docker/pulls/1995chen/dnf.svg?maxAge=3600)](https://hub.docker.com/r/1995chen/dnf/)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/1995chen/dnf/master/LICENSE)
+
+## DNF 服务器管理平台
+
+本项目提供 DNF 游戏服务（简称服务）。[DNF 服务器管理平台](https://github.com/onlyGuo/dnf-server-public)（简称平台）是独立项目，可连接服务数据库运行，也可与服务部署在同一宿主机或同一容器中。
+
+已发布的集成镜像为 `guoshengkai/dnf-server:dnf-integrated`，架构为 `linux/amd64`。平台独立镜像为 `guoshengkai/dnf-server:latest`。集成镜像支持桥接网络和宿主机网络；宿主机网络模式下平台默认访问端口为 **8003**。
+
+平台可管理账号、角色、邮件、背包、频道、PVF、图标和公私钥。频道支持独立地址与 DDNS；PVF 或密钥更新会按需要重启服务进程。服务数据库、PVF、频道配置和密钥应使用持久化目录。具体构建、网络配置和迁移步骤见 [集成构建说明](build/Centos7-DNF/WEB_INTEGRATION.md) 与 [集成部署说明](build/Centos7-DNF/web/integration/README.md)。
+
+以下原有文档中的独立服务镜像和启动示例仍适用于原服务，不会自动包含平台。
 
 ## 概述
 
