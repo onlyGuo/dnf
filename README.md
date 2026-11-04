@@ -1,20 +1,27 @@
-# DNF 一体化服务
+# DNF 服务：集成 DNF 服务器管理平台
 
-基于 [1995chen/dnf](https://github.com/1995chen/dnf) 构建的 DNF 服务端 Docker 镜像。感谢原项目完成服务、数据库与初始化流程的容器化；本项目在此基础上集成了 [DNF 服务器管理平台](https://github.com/onlyGuo/dnf-server-public)，一个容器即可运行游戏服务、数据库和 Web 后台。
+本仓库 fork 自 [1995chen/dnf](https://github.com/1995chen/dnf)。原项目将 DNF 服务、数据库及初始化脚本整合进 Docker，支持通过环境变量快速部署；感谢原作者及相关项目为服务容器化所做的工作。本仓库在此基础上集成了 Web 管理平台，提供一套可通过图形界面管理的 DNF 服务端。
 
-搭配 [DNFLogin 登录器](https://github.com/onlyGuo/DNFLogin)，可集中管理游戏运营、服务配置及客户端更新。
+这里把游戏服务简称为**服务**，把 DNF 服务器管理平台简称为**平台**。集成镜像包含服务、数据库、Java 运行环境和平台，一个容器即可启动整套服务。
 
-## 功能一览
+## 相关项目
 
-- **运营管理**：管理账号、角色和属性，发送游戏邮件与物品，完成任务。
-- **频道管理**：新增、编辑、启用、停用和重启频道，配置地下城、交易和决斗场等类型，查看内存占用。单频道修改无需重启整个容器。
-- **动态地址**：默认通告地址和各频道可选择固定 IP 或 DDNS。
-- **资源管理**：浏览 PVF 物品，上传新 PVF 更新服务，上传 `ImagePacks2` ZIP 更新图标。
-- **背包管理**：查看和编辑物品、装备、背包及快捷栏。
-- **登录器与客户端**：管理登录器背景、下载地址和版本更新，集中配置服务器地址、等级上限、画质和自动拾取等。
-- **数据库与密钥**：图形化管理数据库，上传或生成游戏公私钥对。
+- [原项目：1995chen/dnf](https://github.com/1995chen/dnf)：本仓库的上游项目。
+- [DNF 服务器管理平台：dnf-server-public](https://github.com/onlyGuo/dnf-server-public)：开放的 Web 后台，可独立部署，也可与服务部署在同一宿主机或容器。
+- [DNFLogin 登录器](https://github.com/onlyGuo/DNFLogin)：配套登录器，使用平台提供的登录、配置和版本更新接口。
+- [PVF/NPK 解析器](https://github.com/onlyGuo/dnf_parser)：平台用于解析游戏资源的项目。
 
-![频道管理](doc/platform-screenshots/channel-management.png)
+## 相对原项目的主要变化
+
+- **统一管理入口**：平台提供账号、角色、邮件、物品、任务等 GM 运营功能，也能通过页面管理服务；日常操作不再依赖单独的本地 GM 工具。后台按账号角色控制权限，管理员也可以作为玩家登录游戏。
+- **角色与背包**：编辑角色属性、浏览和修改背包及快捷栏，向角色发送邮件和物品。
+- **频道运维**：新增、编辑、启用、停用和重启频道，无需为单个频道变更重启整个容器或重新运行整套服务。可选择游戏默认类型、地下城、交易、亡者峡谷、普通决斗场、自由决斗场和公平决斗场。页面显示频道进程内存及每频道约 1 GB 的预估。
+- **动态地址**：默认通告地址和各频道地址均可配置固定 IPv4 或 DDNS。单频道地址改变时只重启该频道；默认地址改变涉及共用中继和 STUN，还会重新加载相关公共进程和已启用频道。
+- **PVF 与资源**：在后台浏览 PVF 中的物品属性，上传自定义 PVF，或上传 `ImagePacks2` ZIP 更新物品图标。更换 PVF 后会重启运行中的频道。
+- **登录器和客户端**：后台集中配置登录器标题、背景、整包地址与更新版本，以及客户端的服务器地址、等级上限、画质、自动拾取等选项，具体生效范围取决于配套客户端的实现。
+- **数据库与密钥**：超管可浏览数据库、编辑数据并执行 SQL；也可上传匹配的公私钥对或重新生成密钥，并同步至服务。
+
+平台与 DNFLogin 提供统一的管理和登录入口；使用平台管理不需要额外运行本地 GM 工具。
 
 ## 快速开始
 
@@ -62,33 +69,51 @@ docker run -d --name dnf --hostname dnf --restart unless-stopped \
 
 ## 功能预览
 
-<details>
-<summary>角色、背包与游戏邮件</summary>
+### 角色、背包和邮件
 
 ![角色管理](doc/platform-screenshots/role-management.png)
+
 ![角色背包与快捷栏](doc/platform-screenshots/inventory-management.png)
+
 ![发送邮件与选择物品](doc/platform-screenshots/mail-items.png)
 
-</details>
-
-<details>
-<summary>PVF、登录器、客户端和数据库</summary>
+### PVF 和频道
 
 ![PVF 管理](doc/platform-screenshots/pvf-management.png)
+
+![频道管理](doc/platform-screenshots/channel-management.png)
+
+### 登录器和客户端
+
 ![登录器配置](doc/platform-screenshots/launcher-settings.png)
+
 ![版本管理](doc/platform-screenshots/launcher-versions.png)
+
 ![客户端配置](doc/platform-screenshots/client-settings.png)
+
+### 数据库管理
+
 ![数据库管理](doc/platform-screenshots/database-management.png)
 
-</details>
+## 镜像
 
-## 项目与构建
+| 镜像 | 内容 | 已发布架构 |
+| --- | --- | --- |
+| `guoshengkai/dnf-server:dnf-integrated` | 服务、数据库与平台的一体化镜像 | `linux/amd64` |
+| `guoshengkai/dnf-server:latest` | 独立平台镜像，需连接已有数据库 | `linux/amd64` |
 
-- [DNF 服务器管理平台](https://github.com/onlyGuo/dnf-server-public)：可单独部署，也可与服务同机运行。
-- [DNFLogin 登录器](https://github.com/onlyGuo/DNFLogin)：游戏登录与更新。
-- [PVF/NPK 解析器](https://github.com/onlyGuo/dnf_parser)：游戏数据与图标解析。
-- [集成构建说明](build/Centos7-DNF/WEB_INTEGRATION.md) · [服务集成说明](build/Centos7-DNF/web/integration/README.md)。
+```bash
+docker pull guoshengkai/dnf-server:dnf-integrated
+```
 
-镜像发布架构为 `linux/amd64`。从旧版升级时，如曾安装宿主机守护服务，需停用该服务并清理其遗留规则。
+上面的启动示例在 Linux 宿主机使用 host 网络；独立部署平台的示例见[平台项目 README](https://github.com/onlyGuo/dnf-server-public)。宿主机网络使容器共享宿主机网络栈，不需要 `-p` 映射；端口直接占用宿主机端口。详见 [Docker host 网络文档](https://docs.docker.com/engine/network/drivers/host/)。
+
+## 构建与其他资料
+
+从服务项目构建集成镜像的操作、替换平台 JAR 和版本同步见[集成构建说明](build/Centos7-DNF/WEB_INTEGRATION.md)，更多服务管理细节见[服务集成说明](build/Centos7-DNF/web/integration/README.md)。原项目的[环境准备](doc/PrepareLinux.md)、[其他部署方式](doc/OtherDeploy.md)和[服务架构图](doc/ArchitectureDiagram.md)可供参考；其中旧版镜像示例不等同于本文的集成镜像。
+
+上游相关社区项目：[XanderYe/dnf](https://github.com/XanderYe/dnf)、[llnut/dnf](https://github.com/llnut/dnf)。
+
+从旧版升级时，如曾安装宿主机守护服务，需停用该服务并清理其遗留规则。
 
 原项目声明该项目仅供学习使用。
