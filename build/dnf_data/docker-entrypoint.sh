@@ -24,10 +24,6 @@ export MYSQL_PORT=$(echo $MYSQL_PORT | sed "s/[\'\"]//g")
 export MYSQL_GAME_ALLOW_IP=$(echo $MYSQL_GAME_ALLOW_IP | sed "s/[\'\"]//g")
 export AUTO_PUBLIC_IP=$(echo $AUTO_PUBLIC_IP | sed "s/[\'\"]//g")
 export PUBLIC_IP=$(echo $PUBLIC_IP | sed "s/[\'\"]//g")
-export GM_ACCOUNT=$(echo $GM_ACCOUNT | sed "s/[\'\"]//g")
-export GM_PASSWORD=$(echo $GM_PASSWORD | sed "s/[\'\"]//g")
-export GM_CONNECT_KEY=$(echo $GM_CONNECT_KEY | sed "s/[\'\"]//g")
-export GM_LANDER_VERSION=$(echo $GM_LANDER_VERSION | sed "s/[\'\"]//g")
 export DNF_DB_ROOT_PASSWORD=$(echo $DNF_DB_ROOT_PASSWORD | sed "s/[\'\"]//g")
 export DNF_DB_GAME_PASSWORD=$(echo $DNF_DB_GAME_PASSWORD | sed "s/[\'\"]//g")
 export WEB_USER=$(echo $WEB_USER | sed "s/[\'\"]//g")
@@ -120,7 +116,7 @@ rm -rf /data/log/*
 rm -rf /home/neople/game/log/*
 # 清理/dp2目录
 rm -rf /dp2
-# 给supervisor扩展文件赋予权限[可用于扩展第三方网关]
+# 创建 Supervisor 扩展配置目录
 mkdir -p /data/conf.d
 # 创建DP目录
 mkdir -p /data/dp
@@ -155,13 +151,6 @@ fi
 # 删除无用文件
 rm -rf /home/template/neople-tmp
 mkdir -p /home/neople
-# 清理root下文件
-rm -rf /root/DnfGateServer
-rm -rf /root/GateRestart
-rm -rf /root/GateStop
-rm -rf /root/Config.ini
-rm -rf /root/privatekey.pem
-
 # 复制待使用文件
 cp -r /home/template/neople /home/template/neople-tmp
 # 修改配置文件
@@ -190,19 +179,6 @@ chmod 777 /home/neople/game/df_game_r
 cp /data/publickey.pem /home/neople/game/
 # 为DP目录赋予权限[为了支持更多未知场景, 这里直接给整个目录777权限]
 chmod 777 -R /data/dp
-# 重置root目录
-cp /home/template/root/* /root/
-chmod 777 /root/*
-# 拷贝证书key
-cp /data/privatekey.pem /root/
-# 构建配置文件软链[不能使用硬链接, 硬链接不可跨设备]
-ln -s /data/Config.ini /root/Config.ini
-# 替换Config.ini中的GM用户名、密码、连接KEY、登录器版本[这里操作的对象是一个软链接不需要指定-type]
-sed -i "s/GAME_PASSWORD/$DNF_DB_GAME_PASSWORD/g" `find /data -name "*.ini"`
-sed -i "s/GM_ACCOUNT/$GM_ACCOUNT/g" `find /data -name "*.ini"`
-sed -i "s/GM_PASSWORD/$GM_PASSWORD/g" `find /data -name "*.ini"`
-sed -i "s/GM_CONNECT_KEY/$GM_CONNECT_KEY/g" `find /data -name "*.ini"`
-sed -i "s/GM_LANDER_VERSION/$GM_LANDER_VERSION/g" `find /data -name "*.ini"`
 # 重设supervisor web网页密码
 sed -i "s/^username=.*/username=$WEB_USER/" /etc/supervisord.conf
 sed -i "s/^password=.*/password=$WEB_PASS/" /etc/supervisord.conf

@@ -1,3 +1,5 @@
+> 以下多容器与 Kubernetes 示例来自上游旧版镜像。当前一体化镜像请优先使用 [快速开始](../README.md#快速开始)。
+
 # 详细部署文档
 
 ## 大区代号映射表
@@ -92,15 +94,6 @@
 | WEB_USER | supervisor web页面用户名 |  | root |
 | WEB_PASS | supervisor web页面密码 |  | 123456 |
 
-
-### 统一网关配置
-
-| 环境变量名称 | 描述 | 可选参数 | 默认值 |
-| ------- | ------- | ------- | ------- |
-| GM_ACCOUNT | GM管理员账号 | 不能有特殊字符 | gmuser |
-| GM_PASSWORD | GM管理员密码 | 不能有特殊字符 | gmpass |
-| GM_CONNECT_KEY | GM连接KEY[自定以密钥请使用网关生成的密钥，因为密钥有格式限制，不符合格式的密钥会导致登录器一致卡在网关连接那里] |  | 763WXRBW3PFTC3IXPFWH |
-| GM_LANDER_VERSION | GM登录器版本 |  | 20180307 |
 
 ### 大区扩展配置
 

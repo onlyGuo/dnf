@@ -66,14 +66,6 @@ else
   echo "publickey.pem have already inited, do nothing!"
 fi
 
-# 判断Config.ini文件是否初始化过
-if [ ! -f "/data/Config.ini" ];then
-  # 拷贝版本文件到持久化目录
-  cp /home/template/init/Config.ini /data/
-  echo "init Config.ini success"
-else
-  echo "Config.ini have already inited, do nothing!"
-fi
 # 判断DP文件是否初始化过
 if [ ! -f "/data/dp/libhook.so" ];then
   # 拷贝DP文件到持久化目录

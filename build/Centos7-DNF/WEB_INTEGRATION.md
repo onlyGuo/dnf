@@ -2,7 +2,7 @@
 
 [DNF 服务器管理平台](https://github.com/onlyGuo/dnf-server-public)（简称平台）与本项目的游戏服务（简称服务）是独立项目。`web/dnf-admin.jar` 包含平台后端和管理页面，`web/integration` 包含服务启动适配资源；构建集成镜像不需要平台项目目录或平台镜像。
 
-当前打包的平台源码提交：`2c493a07729957ed48f6a88dc5672935a867311e`。
+当前打包的平台源码提交：`f14308bf8e112a57e9cce71d18cad2b8dae47b35`。
 
 已发布的集成镜像：
 
