@@ -2,12 +2,12 @@
 
 [DNF 服务器管理平台](https://github.com/onlyGuo/dnf-server-public)（简称平台）与本项目的游戏服务（简称服务）是独立项目。`web/dnf-admin.jar` 包含平台后端和管理页面，`web/integration` 包含服务启动适配资源；构建集成镜像不需要平台项目目录或平台镜像。
 
-当前打包的平台源码提交：`f14308bf8e112a57e9cce71d18cad2b8dae47b35`。
+更新平台时，请同步平台 JAR、初始化 SQL 和集成脚本。
 
 已发布的集成镜像：
 
 ```bash
-docker pull guoshengkai/dnf-server:dnf-integrated
+docker pull guoshengkai/dnf:latest
 ```
 
 如需从本项目构建，先按服务原有流程构建游戏镜像，再在项目根目录执行：

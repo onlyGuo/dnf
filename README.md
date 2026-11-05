@@ -14,7 +14,7 @@
 ## 相对原项目的主要变化
 
 - **统一管理入口**：平台提供账号、角色、邮件、物品、任务等 GM 运营功能，也能通过页面管理服务；日常操作不再依赖单独的本地 GM 工具。后台按账号角色控制权限，管理员也可以作为玩家登录游戏。
-- **角色与背包**：编辑角色属性、浏览和修改背包及快捷栏，向角色发送邮件和物品。
+- **角色与背包**：编辑角色属性、浏览和修改背包及快捷栏，向角色发送邮件和物品；受支持的服务可向在线角色即时通知新邮件，无需重新选择角色。
 - **频道运维**：新增、编辑、启用、停用和重启频道，无需为单个频道变更重启整个容器或重新运行整套服务。可选择游戏默认类型、地下城、交易、亡者峡谷、普通决斗场、自由决斗场和公平决斗场。页面显示频道进程内存及每频道约 1 GB 的预估。
 - **动态地址**：默认通告地址和各频道地址均可配置固定 IPv4 或 DDNS。单频道地址改变时只重启该频道；默认地址改变涉及共用中继和 STUN，还会重新加载相关公共进程和已启用频道。
 - **PVF 与资源**：在后台浏览 PVF 中的物品属性，上传自定义 PVF，或上传 `ImagePacks2` ZIP 更新物品图标。更换 PVF 后会重启运行中的频道。
@@ -45,7 +45,7 @@ docker run -d --name dnf --hostname dnf --restart unless-stopped \
   -v /srv/dnf/mysql:/var/lib/mysql \
   -v /srv/dnf/log:/home/neople/game/log \
   -v /srv/dnf/platform:/data/dnf-admin \
-  guoshengkai/dnf-server:dnf-integrated
+  guoshengkai/dnf:latest
 ```
 
 `DNF_DB_GAME_PASSWORD` 需要 8 位。首次启动后访问 `http://服务器地址:8003/login`；没有超管时，已有的第一个账号会被设为超管，空账号库的第一个注册账号会成为超管。完成启动后，可在平台配置频道及 DDNS。
@@ -99,12 +99,14 @@ docker run -d --name dnf --hostname dnf --restart unless-stopped \
 
 | 镜像 | 内容 | 已发布架构 |
 | --- | --- | --- |
-| `guoshengkai/dnf-server:dnf-integrated` | 服务、数据库与平台的一体化镜像 | `linux/amd64` |
+| `guoshengkai/dnf:latest` | 服务、数据库与平台的一体化镜像 | `linux/amd64` |
 | `guoshengkai/dnf-server:latest` | 独立平台镜像，需连接已有数据库 | `linux/amd64` |
 
 ```bash
-docker pull guoshengkai/dnf-server:dnf-integrated
+docker pull guoshengkai/dnf:latest
 ```
+
+镜像发布信息见 Docker Hub 的[一体化服务](https://hub.docker.com/r/guoshengkai/dnf)和[独立平台](https://hub.docker.com/r/guoshengkai/dnf-server)。
 
 上面的启动示例在 Linux 宿主机使用 host 网络；独立部署平台的示例见[平台项目 README](https://github.com/onlyGuo/dnf-server-public)。宿主机网络使容器共享宿主机网络栈，不需要 `-p` 映射；端口直接占用宿主机端口。详见 [Docker host 网络文档](https://docs.docker.com/engine/network/drivers/host/)。
 
